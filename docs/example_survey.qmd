@@ -9,6 +9,7 @@ format: html
 
 # Pakete aktivieren ----
 library(rio)
+library(nanoparquet)
 library(dplyr)
 library(tidyr)
 library(stringr)
