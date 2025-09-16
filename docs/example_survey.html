@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Example Survey</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="example_survey_files/libs/clipboard/clipboard.min.js"></script>
+<script src="example_survey_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="example_survey_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="example_survey_files/libs/quarto-html/popper.min.js"></script>
+<script src="example_survey_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="example_survey_files/libs/quarto-html/anchor.min.js"></script>
+<link href="example_survey_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="example_survey_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="example_survey_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="example_survey_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="example_survey_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Example Survey</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="where-the-data-comes-from" class="level2">
+<h2 class="anchored" data-anchor-id="where-the-data-comes-from">Where the data comes from</h2>
+<p>This is synthetic data based on correlations from a representative survey of German adults conducted in 2021.</p>
+</section>
+<section id="what-the-data-looks-like" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-data-looks-like">What the data looks like</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span> <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,146
+Columns: 44
+$ SD_age      &lt;dbl&gt; 48, 61, 37, 56, 50, 33, 38, 42, 56, 43, 32, 67, 52, 54, 47…
+$ SD_gender   &lt;fct&gt; male, female, male, male, male, female, female, female, ma…
+$ SD_pol_ori  &lt;fct&gt; 7, 3, 6, 5, 8, 6, 6, 7, 6, 9, 7, 9, 6, 7, 7, 6, 3, 8, 6, 2…
+$ SD_pol_intr &lt;fct&gt; Politik interessiert mich sehr., Politik interessiert mich…
+$ RA_01       &lt;fct&gt; unentschieden, unentschieden, stimme gar nicht zu, unentsc…
+$ RA_02       &lt;fct&gt; unentschieden, unentschieden, stimme gar nicht zu, stimme …
+$ RA_03       &lt;fct&gt; unentschieden, unentschieden, stimme gar nicht zu, unentsc…
+$ RA_04       &lt;fct&gt; stimme eher zu, unentschieden, unentschieden, stimme eher …
+$ RA_05       &lt;fct&gt; unentschieden, stimme eher nicht zu, unentschieden, stimme…
+$ RA_06       &lt;fct&gt; unentschieden, unentschieden, stimme gar nicht zu, stimme …
+$ RA_07       &lt;fct&gt; stimme eher zu, unentschieden, stimme eher nicht zu, unent…
+$ RA_08       &lt;fct&gt; unentschieden, unentschieden, stimme gar nicht zu, stimme …
+$ RA_09       &lt;fct&gt; stimme eher nicht zu, stimme eher zu, stimme gar nicht zu,…
+$ MT_1        &lt;fct&gt; 3, 4, 2, 2, stimme voll und ganz zu, 2, 3, stimme voll und…
+$ MT_2        &lt;fct&gt; 3, stimme voll und ganz zu, 2, 2, 4, 2, 3, stimme voll und…
+$ MT_3        &lt;fct&gt; 4, stimme voll und ganz zu, 2, 3, stimme voll und ganz zu,…
+$ SM_FB       &lt;fct&gt; nie, mehr als einmal am Tag aber weniger als fünfmal am Ta…
+$ SM_TW       &lt;fct&gt; nie, nie, etwa einmal in der Woche, nie, etwa einmal in de…
+$ SM_IG       &lt;fct&gt; nie, nie, etwa einmal in der Woche, etwa einmal in der Woc…
+$ SM_SC       &lt;fct&gt; nie, nie, nie, nie, etwa einmal in der Woche, nie, nie, ni…
+$ SM_YT       &lt;fct&gt; einmal am Tag, einmal am Tag, einmal am Tag, etwa einmal i…
+$ SM_WA       &lt;fct&gt; mehr als einmal am Tag aber weniger als fünfmal am Tag, me…
+$ SM_TG       &lt;fct&gt; nie, nie, nie, etwa einmal in der Woche, nie, nie, nie, ni…
+$ TH_CDU_T2   &lt;fct&gt; Ich stehe der Partei neutral gegenüber 0, -1, -1, -2, +1, …
+$ TH_SPD_T2   &lt;fct&gt; Ich stehe der Partei neutral gegenüber 0, +1, -1, -2, -2, …
+$ TH_GRUEN_T2 &lt;fct&gt; +1, +2, +2, +1, +3, Ich halte überhaupt nichts von der Par…
+$ TH_AFD_T2   &lt;fct&gt; Ich halte überhaupt nichts von der Partei -5, Ich halte üb…
+$ TH_LINKE_T2 &lt;fct&gt; -4, +4, -1, -4, -3, Ich halte überhaupt nichts von der Par…
+$ TH_FDP_T2   &lt;fct&gt; Ich stehe der Partei neutral gegenüber 0, Ich stehe der Pa…
+$ TH_CDU_T3   &lt;fct&gt; -4, -1, Ich stehe der Partei neutral gegenüber 0, -3, +1, …
+$ TH_SPD_T3   &lt;fct&gt; -2, +1, Ich stehe der Partei neutral gegenüber 0, -2, -1, …
+$ TH_GRUEN_T3 &lt;fct&gt; Ich stehe der Partei neutral gegenüber 0, +2, +1, +1, Ich …
+$ TH_AFD_T3   &lt;fct&gt; Ich halte überhaupt nichts von der Partei -5, Ich halte üb…
+$ TH_LINKE_T3 &lt;fct&gt; Ich halte überhaupt nichts von der Partei -5, +4, -1, -4, …
+$ TH_FDP_T3   &lt;fct&gt; Ich stehe der Partei neutral gegenüber 0, -1, Ich stehe de…
+$ TH_CDU_T1   &lt;fct&gt; +1, -1, -2, -2, +2, Ich halte überhaupt nichts von der Par…
+$ TH_SPD_T1   &lt;fct&gt; -2, +1, Ich stehe der Partei neutral gegenüber 0, -1, -3, …
+$ TH_GRUEN_T1 &lt;fct&gt; +1, +2, +2, +1, +2, Ich halte überhaupt nichts von der Par…
+$ TH_AFD_T1   &lt;fct&gt; -4, Ich halte überhaupt nichts von der Partei -5, Ich halt…
+$ TH_LINKE_T1 &lt;fct&gt; -4, +4, -1, -4, -4, Ich stehe der Partei neutral gegenüber…
+$ TH_FDP_T1   &lt;fct&gt; -2, -4, -1, Ich halte überhaupt nichts von der Partei -5, …
+$ RA.ind      &lt;dbl&gt; 3.111111, 3.000000, 1.555556, 2.333333, 2.888889, 3.000000…
+$ MT.ind      &lt;dbl&gt; 3.333333, 4.666667, 2.000000, 2.333333, 4.666667, 1.666667…
+$ SM.ind      &lt;dbl&gt; 14, 18, 18, 15, 27, 23, 23, 14, 13, 20, 25, 19, 19, 13, 22…</code></pre>
+</div>
+</div>
+<p>There are 1146 rows and 44 variables in the data. See <a href="#tbl-summary" class="quarto-xref">Table&nbsp;1</a> for summary statistics.</p>
+<div class="cell">
+<div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Summary statistics
+</figcaption>
+<div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="mssnmfyixt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mssnmfyixt table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mssnmfyixt thead, #mssnmfyixt tbody, #mssnmfyixt tfoot, #mssnmfyixt tr, #mssnmfyixt td, #mssnmfyixt th {
+  border-style: none;
+}
+
+#mssnmfyixt p {
+  margin: 0;
+  padding: 0;
+}
+
+#mssnmfyixt .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mssnmfyixt .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mssnmfyixt .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mssnmfyixt .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mssnmfyixt .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mssnmfyixt .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mssnmfyixt .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mssnmfyixt .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mssnmfyixt .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mssnmfyixt .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mssnmfyixt .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mssnmfyixt .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mssnmfyixt .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mssnmfyixt .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mssnmfyixt .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mssnmfyixt .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mssnmfyixt .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mssnmfyixt .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mssnmfyixt .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mssnmfyixt .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mssnmfyixt .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mssnmfyixt .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mssnmfyixt .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mssnmfyixt .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mssnmfyixt .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mssnmfyixt .gt_left {
+  text-align: left;
+}
+
+#mssnmfyixt .gt_center {
+  text-align: center;
+}
+
+#mssnmfyixt .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mssnmfyixt .gt_font_normal {
+  font-weight: normal;
+}
+
+#mssnmfyixt .gt_font_bold {
+  font-weight: bold;
+}
+
+#mssnmfyixt .gt_font_italic {
+  font-style: italic;
+}
+
+#mssnmfyixt .gt_super {
+  font-size: 65%;
+}
+
+#mssnmfyixt .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mssnmfyixt .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mssnmfyixt .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mssnmfyixt .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mssnmfyixt .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mssnmfyixt .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mssnmfyixt .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#mssnmfyixt .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#mssnmfyixt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Name</th>
+<th id="n" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">n</th>
+<th id="M" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">M</th>
+<th id="MDN" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MDN</th>
+<th id="SD" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SD</th>
+<th id="SE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SE</th>
+<th id="MAD" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAD</th>
+<th id="MIN" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MIN</th>
+<th id="MAX" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAX</th>
+<th id="RANGE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RANGE</th>
+<th id="SKEW" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">SKEW</th>
+<th id="KURT" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">KURT</th>
+<th id="MIS" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MIS</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Name">SD_age</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">44.60</td>
+<td class="gt_row gt_right" headers="MDN">44.00</td>
+<td class="gt_row gt_right" headers="SD">13.82</td>
+<td class="gt_row gt_right" headers="SE">0.41</td>
+<td class="gt_row gt_right" headers="MAD">17.79</td>
+<td class="gt_row gt_right" headers="MIN">18.00</td>
+<td class="gt_row gt_right" headers="MAX">69.00</td>
+<td class="gt_row gt_right" headers="RANGE">51.00</td>
+<td class="gt_row gt_right" headers="SKEW">−0.06</td>
+<td class="gt_row gt_right" headers="KURT">1.88</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Name">SD_pol_ori</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">5.49</td>
+<td class="gt_row gt_right" headers="MDN">6.00</td>
+<td class="gt_row gt_right" headers="SD">2.05</td>
+<td class="gt_row gt_right" headers="SE">0.06</td>
+<td class="gt_row gt_right" headers="MAD">1.48</td>
+<td class="gt_row gt_right" headers="MIN">1.00</td>
+<td class="gt_row gt_right" headers="MAX">11.00</td>
+<td class="gt_row gt_right" headers="RANGE">10.00</td>
+<td class="gt_row gt_right" headers="SKEW">0.05</td>
+<td class="gt_row gt_right" headers="KURT">2.69</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Name">SD_pol_intr</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">3.77</td>
+<td class="gt_row gt_right" headers="MDN">4.00</td>
+<td class="gt_row gt_right" headers="SD">0.93</td>
+<td class="gt_row gt_right" headers="SE">0.03</td>
+<td class="gt_row gt_right" headers="MAD">1.48</td>
+<td class="gt_row gt_right" headers="MIN">1.00</td>
+<td class="gt_row gt_right" headers="MAX">5.00</td>
+<td class="gt_row gt_right" headers="RANGE">4.00</td>
+<td class="gt_row gt_right" headers="SKEW">−0.62</td>
+<td class="gt_row gt_right" headers="KURT">3.33</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Name">RA.ind</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">2.90</td>
+<td class="gt_row gt_right" headers="MDN">3.00</td>
+<td class="gt_row gt_right" headers="SD">0.71</td>
+<td class="gt_row gt_right" headers="SE">0.02</td>
+<td class="gt_row gt_right" headers="MAD">0.66</td>
+<td class="gt_row gt_right" headers="MIN">1.00</td>
+<td class="gt_row gt_right" headers="MAX">5.00</td>
+<td class="gt_row gt_right" headers="RANGE">4.00</td>
+<td class="gt_row gt_right" headers="SKEW">−0.28</td>
+<td class="gt_row gt_right" headers="KURT">3.02</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Name">MT.ind</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">3.03</td>
+<td class="gt_row gt_right" headers="MDN">3.00</td>
+<td class="gt_row gt_right" headers="SD">1.09</td>
+<td class="gt_row gt_right" headers="SE">0.03</td>
+<td class="gt_row gt_right" headers="MAD">1.48</td>
+<td class="gt_row gt_right" headers="MIN">1.00</td>
+<td class="gt_row gt_right" headers="MAX">5.00</td>
+<td class="gt_row gt_right" headers="RANGE">4.00</td>
+<td class="gt_row gt_right" headers="SKEW">−0.31</td>
+<td class="gt_row gt_right" headers="KURT">2.25</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Name">SM.ind</td>
+<td class="gt_row gt_right" headers="n">1,146.00</td>
+<td class="gt_row gt_right" headers="M">20.18</td>
+<td class="gt_row gt_right" headers="MDN">20.00</td>
+<td class="gt_row gt_right" headers="SD">5.40</td>
+<td class="gt_row gt_right" headers="SE">0.16</td>
+<td class="gt_row gt_right" headers="MAD">5.93</td>
+<td class="gt_row gt_right" headers="MIN">8.00</td>
+<td class="gt_row gt_right" headers="MAX">42.00</td>
+<td class="gt_row gt_right" headers="RANGE">34.00</td>
+<td class="gt_row gt_right" headers="SKEW">0.33</td>
+<td class="gt_row gt_right" headers="KURT">3.04</td>
+<td class="gt_row gt_right" headers="MIS">0.00</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="plotting-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-data">Plotting the data</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-plot-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="example_survey_files/figure-html/fig-plot-1-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: All the data, no filters
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-plot-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="example_survey_files/figure-html/fig-plot-2-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: All the data, no filters
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-plot-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plot-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="example_survey_files/figure-html/fig-plot-3-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plot-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: All the data, no filters
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
