@@ -1,0 +1,229 @@
+---
+title: "Example Survey"
+format: html
+---
+
+```{r}
+#| echo: false
+#| warning: false
+
+# Pakete aktivieren ----
+library(rio)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(gt)
+
+# Setup functions
+summary_table <- function(tbl, by=NULL) {
+    if (as_label(enquo(by)) %in% names(tbl)) {
+        col_names <- names(tbl)[names(tbl)!="g"]
+    } else {
+        col_names <- names(tbl)
+    }
+    if (!all(dplyr::summarise_all(tbl[col_names], class) %in% c("numeric", "integer"))) {
+        warning(sprintf("Non numeric variables have been dropped (%s)", paste(names(tbl)[dplyr::summarise_all(tbl, class) != "numeric"], sep = ", ")))
+    }
+    rm_na <- function(x, cur_col) {
+        x[!is.na(x)]
+    }
+    descriptives <- list(
+        n = \(x) {n()},
+        M = \(x) {x <- rm_na(x); mean(x)},
+        MDN = \(x) {x <- rm_na(x); median(x)},
+        SD = \(x) {x <- rm_na(x); sd(x)},
+        SE = \(x) {x <- rm_na(x);sd(x)/sqrt(n())},
+        MAD = \(x) {x <- rm_na(x); mad(x)},
+        MIN = \(x) {x <- rm_na(x); min(x)},
+        MAX = \(x) {x <- rm_na(x); max(x)},
+        RANGE = \(x) {x <- rm_na(x); max(x)-min(x)},
+        SKEW = \(x) {x <- rm_na(x);sum(((x - mean(x))^3))/((n()-1)*(sd(x)^3))},
+        KURT = \(x) {x <- rm_na(x);n()*sum( (x - mean(x))^4 )/(sum( (x - mean(x))^2 )^2)},
+        MIS = \(x) {sum(is.na(x))}
+    )
+
+    # this if statement should be reworked
+    if (as_label(enquo(by)) %in% names(tbl)) {
+        by <- enquo(by)
+        tbl |>
+            group_by(!! by) |>
+            summarise(
+                across(
+                    where(is.numeric),
+                    descriptives,
+                    .names = "{.col}..{.fn}"
+                )
+            ) |>
+            pivot_longer(-!! by, names_to = "Name") |>
+            mutate(var = str_extract(Name, "(?<=\\.\\.).+$")) |>
+            mutate(Name = str_remove(Name, "\\.\\..+$")) |>
+            pivot_wider(names_from = var, values_from = value)
+    } else {
+        tbl |>
+            summarise(
+                across(
+                    where(is.numeric),
+                    descriptives,
+                    .names = "{.col}..{.fn}"
+                )
+            ) |>
+            pivot_longer(everything(), names_to = "Name") |>
+            mutate(var = str_extract(Name, "(?<=\\.\\.).+$")) |>
+            mutate(Name = str_remove(Name, "\\.\\..+$")) |>
+            pivot_wider(names_from = var, values_from = value)
+    }
+
+}
+
+# Get data from OSF
+source("scripts/setup.R")
+
+# Read and prepare data
+survey <- import("data/example_survey.parquet") |> 
+    filter(if_all(everything(), ~ !is.na(.))) |>  # remove any cases with missing values
+    mutate(across(starts_with("RA_"), as.numeric, .names = "I_{.col}")) |> # factor to numeric
+    mutate(across(starts_with("MT_"), as.numeric, .names = "I_{.col}")) |> # factor to numeric
+    mutate(across(starts_with("SM_"), as.numeric, .names = "I_{.col}")) |> # factor to numeric
+    rowwise() |> # calculate means per row
+    mutate(RA.ind = sum(I_RA_01,I_RA_02,I_RA_03,I_RA_04,I_RA_05,I_RA_06,I_RA_07,I_RA_08,I_RA_09)/9) |> # mean index
+    mutate(MT.ind = sum(I_MT_1,I_MT_2,I_MT_3)/3) |> # mean index
+    mutate(SM.ind = sum(I_SM_FB,I_SM_TW,I_SM_IG,I_SM_SC,I_SM_YT,I_SM_WA,I_SM_TG)) |> # sum index
+    ungroup() |> # disable rowwise grouping
+    select(-starts_with("I_")) # remove transformed cols
+```
+
+## Where the data comes from
+
+This is synthetic data based on correlations from a representative survey of German adults conducted in 2021.
+
+## What the data looks like
+
+```{r}
+survey |> glimpse()
+```
+
+There are `{r} nrow(survey)` rows and `{r} ncol(survey)` variables in the data. See @tbl-summary for summary statistics.
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: tbl-summary
+#| tbl-cap: Summary statistics
+
+survey |> 
+    select(starts_with("SD_"), ends_with(".ind")) |> 
+    mutate(SD_pol_ori = as.numeric(SD_pol_ori)) |> 
+    mutate(SD_pol_intr = as.numeric(SD_pol_intr)) |> 
+    summary_table() |> 
+    gt() |> 
+    fmt_number(-Name)
+    
+```
+
+## Plotting the data 
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-1
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 10
+#| fig-height: 6
+
+survey |> 
+    select(SD_pol_ori, SD_gender) |> 
+    filter(!is.na(SD_gender)) |> 
+    group_by(SD_gender) |> 
+    count(SD_pol_ori) |> 
+    mutate(total_n = sum(n)) |> 
+    filter(total_n > 10) |> 
+    ggplot(aes(x = SD_pol_ori, y = n, fill = SD_gender)) +
+    geom_col(position = "dodge") +
+    labs(
+        title = "Politische Orientierung nach Geschlecht",
+        x = "Politische Orientierung",
+        y = "n",
+        fill = "Geschlecht"
+    )
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-2
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 10
+#| fig-height: 5
+
+survey |> 
+    select(starts_with("MT_")) |> 
+    pivot_longer(starts_with("MT")) |> 
+    filter(!is.na(value)) |> 
+    mutate(name = factor(
+        name, 
+        levels = c("MT_1", "MT_2", "MT_3"), 
+        labels = c("Die etablierten Medien\nschildern die Ereignisse vollständig.", 
+                   "Die Berichte der etablierten\n Medien sind präzise.",
+                   "Die etablierten Medien\nberichten ausgewogen.")
+    )
+    ) |> 
+    group_by(name) |> 
+    count(value) |> 
+    arrange(desc(value)) |> 
+    mutate(p = n/sum(n)) |> 
+    mutate(pos = cumsum(p)-(p/2)) |> 
+    ungroup() |> 
+    ggplot(aes(x = name, y = p, fill = value)) +
+    geom_col(position = "stack") +
+    geom_label(aes(label = n, y = pos), fill = "white") +
+    scale_fill_brewer(palette = "PuOr") + # https://colorbrewer2.org/#type=diverging&scheme=PuOr&n=3
+    scale_y_continuous(labels = scales::percent) +
+    coord_flip() +
+    guides(fill = guide_legend(reverse = TRUE)) +
+    labs(
+        title = "Medienvertrauen",
+        y = "%",
+        x = "",
+        fill = "Antworten"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-3
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 10
+#| fig-height: 8
+
+survey |> 
+    select(starts_with("TH_")) |> 
+    pivot_longer(starts_with("TH_")) |> 
+    mutate(wave = str_split_i(name, "_", 3)) |> 
+    mutate(party = str_split_i(name, "_", 2)) |> 
+    group_by(wave, party) |> 
+    count(value) |> 
+    mutate(p = n/sum(n)) |> 
+    ggplot(aes(x = forcats::fct_rev(wave), y = p, fill = value)) +
+    geom_col() +
+    scale_fill_brewer(palette = "RdYlGn") +
+    scale_y_continuous(labels = percent) +
+    facet_wrap(vars(party), ncol = 1) +
+    coord_flip() +
+    theme(legend.position = "bottom") +
+    guides(fill = guide_legend(nrow = 1)) +
+    labs(
+        title = "Einschätzung der Parteien über die drei Wellen",
+        y = "",
+        x = "",
+        fill = ""
+    )
+```

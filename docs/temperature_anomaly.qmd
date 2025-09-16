@@ -1,0 +1,104 @@
+---
+title: "Temperature Anomaly"
+format: html
+---
+
+```{r}
+#| echo: false
+#| warning: false
+
+library(rio)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(gt)
+
+# Get data from OSF
+source("scripts/setup.R")
+
+# Read and clean data
+temperature_anomalies <- import("data/temperature-anomaly.csv") |> 
+    rename(temp = 4, temp_upper = 5, temp_lower = 6)
+```
+
+## Where the data comes from
+
+This is a reproduction of the chart "[Average temperature anomaly](https://ourworldindata.org/grapher/temperature-anomaly?v=1&csvType=full&useColumnShortNames=false)" on the Our World in Data website.
+
+## What the data looks like
+
+```{r}
+temperature_anomalies |> glimpse()
+```
+
+There are temperature readings from `{r} min(temperature_anomalies$Year)` to `{r} max(temperature_anomalies$Year)`. See @tbl-summary for a subset of the data.
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: tbl-summary
+#| tbl-cap: Summary statistics
+
+temperature_anomalies |> 
+    slice_max(Year, n = 20) |> 
+    pivot_wider(names_from = Entity, values_from = temp, id_cols = c(Year)) |> 
+    gt() |> 
+    fmt_number(-Year)
+```
+
+## Plotting the data 
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-1
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 8
+#| fig-height: 6
+
+
+# Daten plotten ----
+temperature_anomalies |> 
+    filter(Entity == "Global") |> 
+    ggplot(aes(x = Year, y = temp, color = temp)) +
+    geom_line(linewidth = 2) +
+    geom_point() +
+    scale_color_gradient(low = "blue", high = "red") +
+    scale_x_continuous(breaks = seq(1850, 2025, 25)) +
+    labs(
+        title = "Global average temperature anomaly relative to 1961-1990",
+        y = "Temperature anomaly",
+        x = "Year",
+        color = "Temperature anomaly"
+    )
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-2
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 8
+#| fig-height: 6
+
+temperature_anomalies |> 
+    filter(Entity != "Global") |> 
+    ggplot(aes(x = Year, y = temp)) +
+    geom_hline(yintercept = 0) + 
+    geom_ribbon(aes(ymin = temp_lower, ymax = temp_upper), alpha = .2) +
+    geom_line(aes(color = temp)) +
+    scale_color_gradient(low = "blue", high = "red") +
+    facet_wrap(~Entity, nrow = 2) +
+    theme_classic() +
+    labs(
+        title = "Global average temperature anomaly relative to 1961-1990",
+        y = "Temperature anomaly",
+        x = "Year",
+        color = "Temperature anomaly"
+    )
+```

@@ -1,0 +1,141 @@
+---
+title: "Datasaurus Dozen"
+format: html
+---
+
+```{r}
+#| echo: false
+#| warning: false
+
+# Pakete aktivieren ----
+library(rio)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(gt)
+
+# Get data from OSF
+source("scripts/setup.R")
+
+# Read data
+datasaurus <- import("data/datasaurus.csv")
+```
+
+## Where the data comes from
+
+> The Datasaurus dozen comprises thirteen data sets that have nearly identical simple descriptive statistics to two decimal places, yet have very different distributions and appear very different when graphed.[1] It was inspired by the smaller Anscombe's quartet that was created in 1973.
+>
+> -- [wikipedia.org](https://en.wikipedia.org/wiki/Datasaurus_dozen)
+
+## What the data looks like
+
+```{r}
+datasaurus |> glimpse()
+```
+
+There are `{r} datasaurus$dataset |> unique() |> length()` data sets, with two variables each. See @tbl-summary for summary statistics.
+
+> Similar to the Anscombe's quartet, the Datasaurus dozen was designed to further illustrate the importance of looking at a set of data graphically before starting to analyze according to a particular type of relationship, and the inadequacy of basic statistic properties for describing realistic data sets.
+> 
+> -- [wikipedia.org](https://en.wikipedia.org/wiki/Datasaurus_dozen)
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: tbl-summary
+#| tbl-cap: Summary statistics
+
+datasaurus |> 
+    group_by(dataset) |> 
+    summarise(
+        M_y = mean(y),
+        SD_y = sd(y),
+        M_x = mean(x),
+        SD_x = sd(x),
+        cor = cor(x, y)
+    ) |> 
+    gt() |> 
+    fmt_number(M_y:SD_x) |> 
+    fmt_number(cor, decimals = 3) |> 
+    cols_label(
+        M_y = "Mean y",
+        M_x = "Mean x ",
+        SD_y = "Std dev y",
+        SD_x = "Std dev x",
+        cor = "Correlation"
+    )
+```
+
+## Plotting the data 
+
+Looks like something is going on here …
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-1
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 8
+#| fig-height: 6
+
+datasaurus |> 
+    ggplot(aes(x = x, y = y)) +
+    geom_point() +
+    labs(
+        title = "The Datasauruns Dozen",
+        subtitle = sprintf("All datasets have a mean of x: %.2f, mean of y: %.2f, cor(x, y): %.2f", mean(datasaurus$x), mean(datasaurus$y), cor(datasaurus$x, datasaurus$y)),
+        x = "Dataset",
+        y = "Mean"
+    ) +
+    theme(legend.position = "none")
+```
+
+Adding color helps, but it's still hard to read.
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-2
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 8
+#| fig-height: 6
+
+datasaurus |> 
+    ggplot(aes(x = x, y = y, color = dataset)) +
+    geom_point() +
+    labs(
+        title = "The Datasauruns Dozen",
+        subtitle = sprintf("All datasets have a mean of x: %.2f, mean of y: %.2f, cor(x, y): %.2f", mean(datasaurus$x), mean(datasaurus$y), cor(datasaurus$x, datasaurus$y)),
+        x = "Dataset",
+        y = "Mean"
+    )
+```
+
+Facets to the rescue! 
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-plot-3
+#| fig-cap: "All the data, no filters"
+#| fig-alt: ""
+#| fig-width: 8
+#| fig-height: 6
+
+datasaurus |> 
+    ggplot(aes(x = x, y = y, color = dataset)) +
+    geom_point() +
+    facet_wrap(~dataset) +
+    labs(
+        title = "The Datasauruns Dozen",
+        subtitle = sprintf("All datasets have a mean of x: %.2f, mean of y: %.2f, cor(x, y): %.2f", mean(datasaurus$x), mean(datasaurus$y), cor(datasaurus$x, datasaurus$y)),
+        x = "Dataset",
+        y = "Mean"
+    ) +
+    theme(legend.position = "none")
+```
