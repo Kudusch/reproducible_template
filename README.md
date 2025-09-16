@@ -1,5 +1,7 @@
 # A template for reproducible css
 
+This repository holds the research compendium for the reproducible_css workshop. Data is stored on [OSF](https://osf.io/avh69/).
+
 To reproduce the three reports located in the `docs` directory, follow the following steps:
 
 - Install the `renv` package
